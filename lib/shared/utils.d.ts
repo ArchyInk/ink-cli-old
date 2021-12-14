@@ -1,0 +1,10 @@
+export declare const checkType: (file: string, ext: string) => boolean;
+export declare const isMD: (file: string) => boolean;
+export declare const isSFC: (file: string) => boolean;
+export declare const isJsx: (file: string) => boolean;
+export declare const isTsx: (file: string) => boolean;
+export declare const isDTS: (file: string) => boolean;
+export declare const isLess: (file: string) => boolean;
+export declare const isDir: (file: string) => boolean;
+export declare const replaceExt: (file: string, ext: string) => string;
+export declare const removeDirs: (dirs: Array<string>) => Promise<any[]>;
