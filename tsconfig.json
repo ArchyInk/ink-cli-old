@@ -3,12 +3,11 @@
     "baseUrl": ".",
     "outDir": "./lib",
     "target": "esnext",
-    "module": "CommonJS",
+    "module": "commonJS",
     "sourceMap": false,
     "declaration": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
-    "importHelpers": true,
     "allowJs": true,
     "jsx": "preserve",
     "lib": ["esnext", "dom"]

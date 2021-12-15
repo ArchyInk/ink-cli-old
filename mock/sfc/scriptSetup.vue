@@ -2,20 +2,15 @@
  * @author: Archy
  * @Date: 2021-12-15 17:02:16
  * @LastEditors: Archy
- * @LastEditTime: 2021-12-15 17:14:02
- * @FilePath: \ink-cli\mock\sfc\index.vue
+ * @LastEditTime: 2021-12-15 21:13:54
+ * @FilePath: \ink-cli\mock\sfc\scriptSetup.vue
  * @description: 
 -->
 <template>
-  <div class="scale-up-tl rect"></div>
+  <div class="scale-up-tl rect">{{count}}</div>
 </template>
-<script>
-import { defineComponent, ref } from 'vue';
-export default defineComponent({
-  name: 'MockSFC'
-});
-</script>
 <script setup>
+import { defineComponent, ref } from 'vue';
 const count = ref(0)
 setTimeout(() => {
   count.value++
@@ -54,9 +49,7 @@ setTimeout(() => {
   -webkit-animation: scale-up-tl 0.4s cubic-bezier(0.39, 0.575, 0.565, 1) both;
   animation: scale-up-tl 0.4s cubic-bezier(0.39, 0.575, 0.565, 1) both;
 }
-</style>
 
-<style>
 .rect {
   height: 100px;
   width: 100px;
