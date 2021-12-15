@@ -2,7 +2,7 @@
  * @author: Archy
  * @Date: 2021-12-14 09:58:03
  * @LastEditors: Archy
- * @LastEditTime: 2021-12-15 10:37:41
+ * @LastEditTime: 2021-12-15 17:02:10
  * @FilePath: \ink-cli\src\compiler\compile-sfc.ts
  * @description: 
  */
@@ -52,7 +52,7 @@ export function injectRender(script: string, render: string): string {
 export async function compileSFC(filePath: string, options?: any) {
   const content: string = await readFile(filePath, 'utf-8')
   const { descriptor } = parse(content, { sourceMap: false })
-  const { script, scriptSetup, template, styles, filename } = descriptor
+  const { script, scriptSetup, template, styles } = descriptor
   const id = hash(content)
   const hasScope = styles.some((style) => style.scoped)
   const scopeId = hasScope ? `data-v-${id}` : ''
