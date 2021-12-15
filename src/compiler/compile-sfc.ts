@@ -2,21 +2,23 @@
  * @author: Archy
  * @Date: 2021-12-14 09:58:03
  * @LastEditors: Archy
- * @LastEditTime: 2021-12-14 23:34:24
+ * @LastEditTime: 2021-12-15 10:37:41
  * @FilePath: \ink-cli\src\compiler\compile-sfc.ts
  * @description: 
  */
 import hash from 'hash-sum'
 import { removeSync, writeFileSync, readFile } from 'fs-extra'
-import { replaceExt } from '../shared/utils'
+import { replaceExt, easyAppendFileSync } from '../shared/utils'
 import { parse, compileTemplate, compileStyle, compileScript } from '@vue/compiler-sfc'
+import { compileLess } from './compile-less'
+import { parse as path_parse, resolve } from 'path'
 
 const NORMAL_EXPORT_START_RE = /export\s+default\s+{/
 const DEFINE_EXPORT_START_RE = /export\s+default\s+defineComponent\s*\(\s*{/
 const MIXED_EXPORT_START_RE = /const\s+__default__\s+=\s+defineComponent\s*\(\s*{/
 
 export function injectRender(script: string, render: string): string {
-  console.log(DEFINE_EXPORT_START_RE.test(script.trim()));
+  // vue3 <script>
   if (DEFINE_EXPORT_START_RE.test(script.trim())) {
     return script.trim().replace(
       DEFINE_EXPORT_START_RE,
@@ -25,6 +27,7 @@ export function injectRender(script: string, render: string): string {
       `
     )
   }
+  // vue2 <script>
   if (NORMAL_EXPORT_START_RE.test(script.trim())) {
     return script.trim().replace(
       NORMAL_EXPORT_START_RE,
@@ -34,6 +37,7 @@ export function injectRender(script: string, render: string): string {
     )
   }
 
+  // vue3 <script setup> or mixed <script> 
   if (MIXED_EXPORT_START_RE.test(script.trim())) {
     return script.trim().replace(
       MIXED_EXPORT_START_RE,
@@ -48,7 +52,7 @@ export function injectRender(script: string, render: string): string {
 export async function compileSFC(filePath: string, options?: any) {
   const content: string = await readFile(filePath, 'utf-8')
   const { descriptor } = parse(content, { sourceMap: false })
-  const { script, scriptSetup, template, styles } = descriptor
+  const { script, scriptSetup, template, styles, filename } = descriptor
   const id = hash(content)
   const hasScope = styles.some((style) => style.scoped)
   const scopeId = hasScope ? `data-v-${id}` : ''
@@ -69,6 +73,20 @@ export async function compileSFC(filePath: string, options?: any) {
       content = injectRender(content, code)
     }
     removeSync(filePath)
-    writeFileSync(replaceExt(filePath, '.js'), content, 'utf-8')
+    const fileCompiledName = replaceExt(filePath, '.js')
+    writeFileSync(fileCompiledName, content, 'utf-8')
+    styles.forEach(async (style, index) => {
+      const filename = replaceExt(filePath, `.sfc${index ? `_${index}` : ''}.${style.lang || 'css'}`)
+      let { code } = compileStyle({
+        source: style.content,
+        filename,
+        id: scopeId,
+        scoped: style.scoped,
+      })
+      writeFileSync(filename, code, 'utf-8')
+      style.lang === 'less' && (await compileLess(filename))
+      easyAppendFileSync(fileCompiledName, `\nimport '${filename}'`)
+    })
   }
 }
+

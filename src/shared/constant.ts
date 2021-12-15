@@ -3,7 +3,7 @@
  * @author: Archy
  * @Date: 2021-12-14 11:15:56
  * @LastEditors: Archy
- * @LastEditTime: 2021-12-14 13:54:15
+ * @LastEditTime: 2021-12-15 09:56:34
  * @FilePath: \ink-cli\src\shared\constant.ts
  * @description: 
  */
@@ -15,3 +15,4 @@ export const SRC_DIR = resolve(CWD, 'src')
 export const ES_DIR = resolve(CWD, 'es')
 export const LIB_DIR = resolve(CWD, 'lib')
 export const UMD_DIR = resolve(CWD, 'umd')
+export const CONFIG_PATH = resolve(CWD,'inkcli.config.json')

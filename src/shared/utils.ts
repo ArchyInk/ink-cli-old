@@ -2,30 +2,42 @@
  * @author: Archy
  * @Date: 2021-12-14 11:26:47
  * @LastEditors: Archy
- * @LastEditTime: 2021-12-14 20:52:27
+ * @LastEditTime: 2021-12-15 10:33:37
  * @FilePath: \ink-cli\src\shared\utils.ts
  * @description: 
  */
 import { extname } from 'path'
-import { pathExistsSync, lstatSync, remove } from 'fs-extra'
+import { pathExistsSync, lstatSync, remove, readFileSync, appendFileSync } from 'fs-extra'
 
 
-export const checkType = (file: string, ext: string): boolean => {
-  if (isDir(file)) return
-  if (!/\.\w+$/.test(file)) {
-    throw new Error(`[ink-cli] Filename should be end with '.[string]' like '.md' to check filetype, got '${file}'`)
+export const checkType = (filename: string, ext: string): boolean => {
+  if (isDir(filename)) return
+  if (!/\.\w+$/.test(filename)) {
+    throw new Error(`[ink-cli] Filename should be end with '.[string]' like '.md' to check filenametype, got '${filename}'`)
   }
-  return extname(file) === ext
+  return pathExistsSync(filename) && extname(filename) === ext
 }
 
-export const isMD = (file: string): boolean => checkType(file, '.md')
-export const isSFC = (file: string): boolean => checkType(file, '.vue')
-export const isJsx = (file: string): boolean => checkType(file, '.jsx')
-export const isTsx = (file: string): boolean => checkType(file, '.tsx')
-export const isDTS = (file: string): boolean => checkType(file, '.d.ts')
-export const isLess = (file: string): boolean => checkType(file, '.less')
+export const isMD = (filename: string): boolean => checkType(filename, '.md')
+export const isSFC = (filename: string): boolean => checkType(filename, '.vue')
+export const isJsx = (filename: string): boolean => checkType(filename, '.jsx')
+export const isTsx = (filename: string): boolean => checkType(filename, '.tsx')
+export const isDTS = (filename: string): boolean => checkType(filename, '.d.ts')
+export const isLess = (filename: string): boolean => checkType(filename, '.less')
 
-export const isDir = (file: string): boolean => pathExistsSync(file) && lstatSync(file).isDirectory()
-export const replaceExt = (file: string, ext: string): string => file.replace(extname(file), ext)
+export const isDir = (filename: string): boolean => pathExistsSync(filename) && lstatSync(filename).isDirectory()
+export const replaceExt = (filename: string, ext: string): string => filename.replace(extname(filename), ext)
 
 export const removeDirs = (dirs: Array<string>) => Promise.all(dirs.map((dir) => remove(dir)))
+
+export const easyReadFileSync = (filename: string) => {
+  if (pathExistsSync(filename)) {
+    const res = readFileSync(filename, 'utf-8')
+    return res
+  }
+}
+
+export const easyAppendFileSync = (filename: string, content: string) => {
+  const c = easyReadFileSync(filename)
+  c.includes(content) || appendFileSync(filename, content)
+}
