@@ -2,7 +2,7 @@
  * @author: Archy
  * @Date: 2021-12-14 09:57:11
  * @LastEditors: Archy
- * @LastEditTime: 2021-12-16 00:12:24
+ * @LastEditTime: 2021-12-16 00:19:49
  * @FilePath: \ink-cli\src\compiler\compile-jsx.ts
  * @description: 
  */
@@ -11,7 +11,6 @@ import { transformAsync } from '@babel/core'
 import { replaceExt } from '../shared/utils'
 
 export const compileJsx = async (filePath: string, options?: any) => {
-  console.log(options)
   try {
     const content = await readFile(filePath, 'utf-8')
     const res = await transformAsync(content, { filename: filePath, ...options })
