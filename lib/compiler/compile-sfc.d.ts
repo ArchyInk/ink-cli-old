@@ -1,3 +1,4 @@
+import type { CompileSFCOpt } from '../types/compiler';
 /**
  * @description: inject transformed render result and scopeId into script
  * @param {string} script
@@ -11,4 +12,4 @@ export declare function injectRender(script: string, render: string, scopeId: st
  * @param {any} options
  * @return {*}
  */
-export declare function compileSFC(filePath: string, options?: any): Promise<void>;
+export declare function compileSFC(filePath: string, options?: CompileSFCOpt): Promise<void>;

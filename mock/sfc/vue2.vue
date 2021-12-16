@@ -2,7 +2,7 @@
  * @Author: Archy
  * @Date: 2021-12-15 23:59:50
  * @LastEditors: Archy
- * @LastEditTime: 2021-12-15 23:59:52
+ * @LastEditTime: 2021-12-16 15:03:58
  * @FilePath: \ink-cli\mock\sfc\vue2.vue
  * @description: 
 -->
@@ -15,7 +15,7 @@
  * @description: 
 -->
 <template>
-  <div class="scale-up-tl rect">{{count}}</div>
+  <div class="scale-up-tl rect">{{ count }}</div>
 </template>
 <script>
 export default {
@@ -33,6 +33,7 @@ export default {
 }
 </script>
 <style lang='less' scoped>
+@import "../less/index.less";
 @-webkit-keyframes scale-up-tl {
   0% {
     -webkit-transform: scale(0.5);

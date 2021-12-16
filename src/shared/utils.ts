@@ -2,7 +2,7 @@
  * @author: Archy
  * @Date: 2021-12-14 11:26:47
  * @LastEditors: Archy
- * @LastEditTime: 2021-12-15 23:51:03
+ * @LastEditTime: 2021-12-16 16:46:58
  * @FilePath: \ink-cli\src\shared\utils.ts
  * @description:
  */
@@ -29,7 +29,7 @@ export const isMD = (filename: string): boolean => checkType(filename, '.md')
 export const isSFC = (filename: string): boolean => checkType(filename, '.vue')
 export const isJsx = (filename: string): boolean => checkType(filename, '.jsx')
 export const isTsx = (filename: string): boolean => checkType(filename, '.tsx')
-export const isDTS = (filename: string): boolean => checkType(filename, '.d.ts')
+export const isJs = (filename: string): boolean => checkType(filename, '.js')
 export const isLess = (filename: string): boolean =>
   checkType(filename, '.less')
 
@@ -37,7 +37,7 @@ export const isDir = (filename: string): boolean =>
   pathExistsSync(filename) && lstatSync(filename).isDirectory()
 export const isFile = (filename: string): boolean =>
   pathExistsSync(filename) && lstatSync(filename).isFile()
-  
+
 export const replaceExt = (filename: string, ext: string): string =>
   filename.replace(extname(filename), ext)
 
