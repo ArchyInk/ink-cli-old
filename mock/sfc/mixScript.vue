@@ -2,7 +2,7 @@
  * @author: Archy
  * @Date: 2021-12-15 17:02:16
  * @LastEditors: Archy
- * @LastEditTime: 2021-12-15 20:27:49
+ * @LastEditTime: 2021-12-16 20:54:42
  * @FilePath: \ink-cli\mock\sfc\mixScript.vue
  * @description: 
 -->
@@ -11,6 +11,8 @@
 </template>
 <script>
 import { defineComponent, ref } from 'vue';
+import test from './script.vue'
+import testjsx from '../jsx/index.jsx'
 export default defineComponent({
   name: 'MockSFC'
 });

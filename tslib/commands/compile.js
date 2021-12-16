@@ -33,6 +33,10 @@ async function compile(cmd) {
     const { path, optPath } = cmd;
     optPath === constant_1.CONFIG_PATH ? constant_1.CONFIG_PATH : (0, path_1.resolve)(constant_1.CWD, optPath);
     const options = await (0, fs_extra_1.readJson)(optPath, 'utf-8');
-    runTask('normal', bundler_1.preCompile, path, options);
+    const targets = options?.options?.target || ['commonjs', 'esmodule', 'umd'];
+    targets.forEach(async (target) => {
+        process.env.COMPILE_TARGET = target;
+        runTask('normal', bundler_1.preCompile, path, options);
+    });
 }
 exports.compile = compile;

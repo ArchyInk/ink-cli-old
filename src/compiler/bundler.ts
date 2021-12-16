@@ -2,14 +2,14 @@
  * @author: Archy
  * @Date: 2021-12-14 09:59:40
  * @LastEditors: Archy
- * @LastEditTime: 2021-12-16 16:46:48
+ * @LastEditTime: 2021-12-16 21:31:11
  * @FilePath: \ink-cli\src\compiler\bundler.ts
  * @description:
  */
 import { resolve, parse } from 'path'
-import { CWD, ES_DIR } from '../shared/constant'
+import { CWD, ES_DIR, TARGET_DIC } from '../shared/constant'
 import {
-  removeDirs,
+  removeDir,
   isSFC,
   isJsx,
   isDir,
@@ -21,7 +21,7 @@ import { readdir, copy, pathExistsSync, rename } from 'fs-extra'
 import { compileJsx } from './compile-jsx'
 import { compileLess } from './compile-less'
 import { compileSFC } from './compile-sfc'
-import { compileJs} from './compile-js'
+import { compileJs } from './compile-js'
 import type { CompileOpt } from '../types/compiler'
 
 /**
@@ -61,10 +61,10 @@ export async function compileSingFile(filePath, options?: CompileOpt) {
  * @return {*}
  */
 export async function compileFile(file: string, options?: CompileOpt) {
-  const { sfcOptions, babelOptions, lessOptions } = options
+  const { sfcOptions, babelConfig, lessOptions } = options
   isSFC(file) && (await compileSFC(file, sfcOptions))
-  isJs(file) && (await compileJs(file, babelOptions))
-  isJsx(file) && (await compileJsx(file, babelOptions))
+  // isJs(file) && (await compileJs(file, babelOptions))
+  isJsx(file) && (await compileJsx(file, babelConfig))
   isLess(file) && (await compileLess(file, lessOptions))
   isDir(file) && (await compileDir(file, options))
 }
@@ -76,17 +76,13 @@ export async function compileFile(file: string, options?: CompileOpt) {
  * @return {*}
  */
 export async function preCompile(path: string, options?: CompileOpt) {
-  const target = options?.options?.target || ['commonjs', 'module', 'umd']
-  target.forEach(async (target) => {
-    process.env.COMPILE_TARGET = target
-  })
-  const fullPath = resolve(CWD, path)
-  if (isFile(fullPath)) {
-    await compileSingFile(fullPath, options)
-  } else if (isDir(fullPath)) {
-    await removeDirs([ES_DIR])
-    await copy(fullPath, ES_DIR)
-    const dist = ES_DIR
-    await compileDir(dist, options)
-  }
+
+    const fullPath = resolve(CWD, path)
+    if (isFile(fullPath)) {
+      await compileSingFile(fullPath, options)
+    } else if (isDir(fullPath)) {
+      await removeDir(path)
+      await copy(fullPath, path)
+      await compileDir(path, options)
+    }
 }

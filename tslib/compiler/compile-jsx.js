@@ -5,11 +5,7 @@ exports.compileJsx = void 0;
  * @author: Archy
  * @Date: 2021-12-14 09:57:11
  * @LastEditors: Archy
-<<<<<<< HEAD
- * @LastEditTime: 2021-12-16 00:19:49
-=======
- * @LastEditTime: 2021-12-16 14:21:01
->>>>>>> ec64cfd22762a34191470c3aa4b157e84fb6e848
+ * @LastEditTime: 2021-12-16 20:51:59
  * @FilePath: \ink-cli\src\compiler\compile-jsx.ts
  * @description:
  */

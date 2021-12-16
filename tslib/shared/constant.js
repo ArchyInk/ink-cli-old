@@ -1,11 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CONFIG_PATH = exports.UMD_DIR = exports.LIB_DIR = exports.ES_DIR = exports.SRC_DIR = exports.CWD = void 0;
+exports.TARGET_DIC = exports.CONFIG_PATH = exports.UMD_DIR = exports.LIB_DIR = exports.ES_DIR = exports.SRC_DIR = exports.CWD = void 0;
 /*
  * @author: Archy
  * @Date: 2021-12-14 11:15:56
  * @LastEditors: Archy
- * @LastEditTime: 2021-12-16 16:40:25
+ * @LastEditTime: 2021-12-16 21:20:35
  * @FilePath: \ink-cli\src\shared\constant.ts
  * @description:
  */
@@ -16,3 +16,8 @@ exports.ES_DIR = (0, path_1.resolve)(exports.CWD, 'es');
 exports.LIB_DIR = (0, path_1.resolve)(exports.CWD, 'lib');
 exports.UMD_DIR = (0, path_1.resolve)(exports.CWD, 'umd');
 exports.CONFIG_PATH = (0, path_1.resolve)(exports.CWD, 'inkcli.config.json');
+exports.TARGET_DIC = {
+    commonjs: exports.LIB_DIR,
+    esmodule: exports.ES_DIR,
+    umd: exports.UMD_DIR,
+};

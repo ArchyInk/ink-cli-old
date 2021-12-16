@@ -8,7 +8,7 @@ exports.compileSFC = exports.injectRender = void 0;
  * @author: Archy
  * @Date: 2021-12-14 09:58:03
  * @LastEditors: Archy
- * @LastEditTime: 2021-12-16 14:35:14
+ * @LastEditTime: 2021-12-16 20:34:10
  * @FilePath: \ink-cli\src\compiler\compile-sfc.ts
  * @description:
  */
@@ -19,11 +19,11 @@ const compiler_sfc_1 = require("@vue/compiler-sfc");
 const compile_less_1 = require("./compile-less");
 const path_1 = require("path");
 // vue2 export default 和 vue3 <script setup>
-const NORMAL_EXPORT_DEFAULT = /export\s+default\s+{/;
+const NORMAL_EXPORT_DEFAULT_REG = /export\s+default\s+{/;
 // vue3 <script>
-const DEFINE_EXPORT_DEFAULT = /export\s+default\s+defineComponent\s*\(\s*{/;
+const DEFINE_EXPORT_DEFAULT_REG = /export\s+default\s+defineComponent\s*\(\s*{/;
 // vue3 <script> and <script setup>
-const MIXED_EXPORT_DEFAULT = /const\s+__default__\s+=\s+defineComponent\s*\(\s*{/;
+const MIXED_EXPORT_DEFAULT_REG = /const\s+__default__\s+=\s+defineComponent\s*\(\s*{/;
 /**
  * @description: inject transformed render result and scopeId into script
  * @param {string} script
@@ -32,22 +32,22 @@ const MIXED_EXPORT_DEFAULT = /const\s+__default__\s+=\s+defineComponent\s*\(\s*{
  */
 function injectRender(script, render, scopeId) {
     // vue3 <script>
-    if (DEFINE_EXPORT_DEFAULT.test(script.trim())) {
-        return script.trim().replace(DEFINE_EXPORT_DEFAULT, `${render}\nexport default defineComponent({
+    if (DEFINE_EXPORT_DEFAULT_REG.test(script.trim())) {
+        return script.trim().replace(DEFINE_EXPORT_DEFAULT_REG, `${render}\nexport default defineComponent({
   render,\n
   __scopeId:'${scopeId}',\n
       `);
     }
     // vue2 <script> and vue3 <script setup>
-    if (NORMAL_EXPORT_DEFAULT.test(script.trim())) {
-        return script.trim().replace(NORMAL_EXPORT_DEFAULT, `${render}\nexport default {
+    if (NORMAL_EXPORT_DEFAULT_REG.test(script.trim())) {
+        return script.trim().replace(NORMAL_EXPORT_DEFAULT_REG, `${render}\nexport default {
   render,\n
   __scopeId:'${scopeId}',
       `);
     }
     // vue3 mixed <script> and <script setup>
-    if (MIXED_EXPORT_DEFAULT.test(script.trim())) {
-        return script.trim().replace(MIXED_EXPORT_DEFAULT, `${render}\nconst __default__ = defineComponent({
+    if (MIXED_EXPORT_DEFAULT_REG.test(script.trim())) {
+        return script.trim().replace(MIXED_EXPORT_DEFAULT_REG, `${render}\nconst __default__ = defineComponent({
   render,\n
   __scopeId:'${scopeId}',
         `);
@@ -93,10 +93,12 @@ async function compileSFC(filePath, options) {
                 id: scopeId,
                 scoped: style.scoped,
             }, options?.styleOptions));
+            code = (0, utils_1.handleStyleImportExt)(code);
             (0, fs_extra_1.writeFileSync)((0, path_1.resolve)(dir, filename), code, 'utf-8');
             content = `import './${filename}'\n` + content;
             style.lang === 'less' && (await (0, compile_less_1.compileLess)((0, path_1.resolve)(dir, filename)));
         });
+        content = (0, utils_1.handleScriptImportExt)(content);
         (0, fs_extra_1.writeFileSync)(fileCompiledName, content, 'utf-8');
     }
 }

@@ -6,7 +6,7 @@
  * @FilePath: \ink-cli\src\commands\compile.ts
  * @description:
  */
-import { preCompile,compileFile } from '../compiler/bundler'
+import { preCompile, compileFile } from '../compiler/bundler'
 import ora from 'ora'
 import { readJson } from 'fs-extra'
 import { CONFIG_PATH, CWD } from '../shared/constant'
@@ -33,5 +33,10 @@ export async function compile(cmd: { path: string; optPath: string }) {
   const { path, optPath } = cmd
   optPath === CONFIG_PATH ? CONFIG_PATH : resolve(CWD, optPath)
   const options = await readJson(optPath, 'utf-8')
-  runTask('normal', preCompile, path, options)
+  const targets = options?.options?.target || ['commonjs', 'esmodule', 'umd']
+  targets.forEach(async (target) => {
+    process.env.COMPILE_TARGET = target
+
+    runTask('normal', preCompile, path, options)
+  })
 }
