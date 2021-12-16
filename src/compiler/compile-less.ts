@@ -10,7 +10,7 @@ import { readFileSync, writeFileSync, removeSync } from 'fs-extra'
 import { render } from 'less'
 import { replaceExt } from '../shared/utils'
 
-export async function compileLess(filePath: string, options?: any) {
+export async function compileLess(filePath: string, options?: Object) {
   const source = readFileSync(filePath, 'utf-8')
   const { css } = await render(source, { filename: filePath, ...options })
   removeSync(filePath)

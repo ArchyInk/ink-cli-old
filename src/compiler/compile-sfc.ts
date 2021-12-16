@@ -2,7 +2,7 @@
  * @author: Archy
  * @Date: 2021-12-14 09:58:03
  * @LastEditors: Archy
- * @LastEditTime: 2021-12-16 00:16:49
+ * @LastEditTime: 2021-12-16 14:35:14
  * @FilePath: \ink-cli\src\compiler\compile-sfc.ts
  * @description:
  */
@@ -17,6 +17,7 @@ import {
 } from '@vue/compiler-sfc'
 import { compileLess } from './compile-less'
 import { parse as path_parse, resolve } from 'path'
+import type { CompileSFCOpt } from '../types/compiler'
 
 // vue2 export default 和 vue3 <script setup>
 const NORMAL_EXPORT_DEFAULT = /export\s+default\s+{/
@@ -77,7 +78,7 @@ export function injectRender(
  * @param {any} options
  * @return {*}
  */
-export async function compileSFC(filePath: string, options?: any) {
+export async function compileSFC(filePath: string, options?: CompileSFCOpt) {
   const content: string = await readFile(filePath, 'utf-8')
   const { descriptor } = parse(content, { sourceMap: false })
   const { script, scriptSetup, template, styles } = descriptor
@@ -90,15 +91,15 @@ export async function compileSFC(filePath: string, options?: any) {
   const hasScope = styles.some((style) => style.scoped)
   const scopeId = hasScope ? `data-v-${id}` : ''
   if (script || scriptSetup) {
-    let { content } = await compileScript(descriptor, { id: scopeId })
+    let { content } = await compileScript(descriptor, Object.assign({ id: scopeId }, options?.scriptOptions))
     const render =
       template &&
-      compileTemplate({
+      compileTemplate(Object.assign({
         id,
         source: template.content,
         filename: filePath,
         scoped: hasScope,
-      })
+      }, options?.templateOptions))
     if (render) {
       const { code } = render
       content = injectRender(content, code, scopeId)
@@ -110,12 +111,12 @@ export async function compileSFC(filePath: string, options?: any) {
 
       const filename = replaceExt(base, `.sfc${index ? `_${index}` : ''}.css`)
 
-      let { code } = compileStyle({
+      let { code } = compileStyle(Object.assign({
         source: style.content,
         filename,
         id: scopeId,
         scoped: style.scoped,
-      })
+      }, options?.styleOptions))
       writeFileSync(resolve(dir, filename), code, 'utf-8')
       content = `import './${filename}'\n` + content
       style.lang === 'less' && (await compileLess(resolve(dir, filename)))

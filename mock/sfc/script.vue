@@ -2,16 +2,8 @@
  * @Author: Archy
  * @Date: 2021-12-15 20:24:30
  * @LastEditors: Archy
- * @LastEditTime: 2021-12-15 20:27:47
+ * @LastEditTime: 2021-12-16 15:43:50
  * @FilePath: \ink-cli\mock\sfc\script.vue
- * @description: 
--->
-<!--
- * @author: Archy
- * @Date: 2021-12-15 17:02:16
- * @LastEditors: Archy
- * @LastEditTime: 2021-12-15 17:14:02
- * @FilePath: \ink-cli\mock\sfc\index.vue
  * @description: 
 -->
 <template>

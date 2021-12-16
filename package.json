@@ -23,6 +23,7 @@
   "homepage": "https://github.com/ArchyInk/ink-cli#readme",
   "devDependencies": {
     "@babel/core": "^7.16.5",
+    "@babel/preset-typescript": "^7.16.5",
     "@types/node": "^16.11.12",
     "@vue/compiler-sfc": "^3.2.26",
     "commander": "^8.3.0",
