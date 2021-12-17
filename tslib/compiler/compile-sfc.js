@@ -8,7 +8,7 @@ exports.compileSFC = exports.injectRender = void 0;
  * @author: Archy
  * @Date: 2021-12-14 09:58:03
  * @LastEditors: Archy
- * @LastEditTime: 2021-12-16 20:34:10
+ * @LastEditTime: 2021-12-17 11:21:38
  * @FilePath: \ink-cli\src\compiler\compile-sfc.ts
  * @description:
  */
@@ -93,7 +93,7 @@ async function compileSFC(filePath, options) {
                 id: scopeId,
                 scoped: style.scoped,
             }, options?.styleOptions));
-            code = (0, utils_1.handleStyleImportExt)(code);
+            // code = handleStyleImportExt(code)
             (0, fs_extra_1.writeFileSync)((0, path_1.resolve)(dir, filename), code, 'utf-8');
             content = `import './${filename}'\n` + content;
             style.lang === 'less' && (await (0, compile_less_1.compileLess)((0, path_1.resolve)(dir, filename)));

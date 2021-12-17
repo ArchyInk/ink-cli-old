@@ -1,10 +1,14 @@
-import { defineComponent, ref } from 'vue'
-import '../less/index.less'
+import { defineComponent, ref } from "vue";
+import '../index.less'
 export default defineComponent({
-  name: 'MockJsx',
-  setup: () => {
+  name: "MockJsx",
+  setup() {
+    const count = ref(0);
+    setInterval(() => {
+      count.value++;
+    }, 1000);
     return () => {
-      return (<div>MockJsx</div>)
-    }
+      return <div className="rect">{count}</div>;
+    };
   },
-})
+});

@@ -6,10 +6,10 @@
   "scripts": {
     "dev": "tsc --watch",
     "build": "tsc",
-    "test": "node ./lib/cli.js"
+    "test": "node ./tslib/cli.js"
   },
   "bin": {
-    "ink-cli": "./lib/cli.js"
+    "ink-cli": "./tslib/cli.js"
   },
   "repository": {
     "type": "git",

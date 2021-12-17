@@ -8,7 +8,7 @@ exports.compile = exports.runTask = void 0;
  * @Author: Archy
  * @Date: 2021-12-15 20:12:24
  * @LastEditors: Archy
- * @LastEditTime: 2021-12-16 16:40:15
+ * @LastEditTime: 2021-12-17 10:25:58
  * @FilePath: \ink-cli\src\commands\compile.ts
  * @description:
  */
@@ -36,7 +36,7 @@ async function compile(cmd) {
     const targets = options?.options?.target || ['commonjs', 'esmodule', 'umd'];
     targets.forEach(async (target) => {
         process.env.COMPILE_TARGET = target;
-        runTask('normal', bundler_1.preCompile, path, options);
+        runTask(target, bundler_1.preCompile, path, options);
     });
 }
 exports.compile = compile;

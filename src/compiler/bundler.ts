@@ -2,7 +2,7 @@
  * @author: Archy
  * @Date: 2021-12-14 09:59:40
  * @LastEditors: Archy
- * @LastEditTime: 2021-12-16 21:31:11
+ * @LastEditTime: 2021-12-17 10:30:03
  * @FilePath: \ink-cli\src\compiler\bundler.ts
  * @description:
  */
@@ -76,13 +76,16 @@ export async function compileFile(file: string, options?: CompileOpt) {
  * @return {*}
  */
 export async function preCompile(path: string, options?: CompileOpt) {
-
     const fullPath = resolve(CWD, path)
+    if(process.env.COMPILE_TARGET === 'umd'){
+      return
+    }
     if (isFile(fullPath)) {
       await compileSingFile(fullPath, options)
     } else if (isDir(fullPath)) {
-      await removeDir(path)
-      await copy(fullPath, path)
-      await compileDir(path, options)
+      const targetPath = TARGET_DIC[process.env.COMPILE_TARGET]
+      await removeDir(targetPath)
+      await copy(fullPath, targetPath)
+      await compileDir(targetPath, options)
     }
 }

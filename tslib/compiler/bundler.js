@@ -5,7 +5,7 @@ exports.preCompile = exports.compileFile = exports.compileSingFile = exports.com
  * @author: Archy
  * @Date: 2021-12-14 09:59:40
  * @LastEditors: Archy
- * @LastEditTime: 2021-12-16 21:31:11
+ * @LastEditTime: 2021-12-17 10:30:03
  * @FilePath: \ink-cli\src\compiler\bundler.ts
  * @description:
  */
@@ -67,13 +67,17 @@ exports.compileFile = compileFile;
  */
 async function preCompile(path, options) {
     const fullPath = (0, path_1.resolve)(constant_1.CWD, path);
+    if (process.env.COMPILE_TARGET === 'umd') {
+        return;
+    }
     if ((0, utils_1.isFile)(fullPath)) {
         await compileSingFile(fullPath, options);
     }
     else if ((0, utils_1.isDir)(fullPath)) {
-        await (0, utils_1.removeDir)(path);
-        await (0, fs_extra_1.copy)(fullPath, path);
-        await compileDir(path, options);
+        const targetPath = constant_1.TARGET_DIC[process.env.COMPILE_TARGET];
+        await (0, utils_1.removeDir)(targetPath);
+        await (0, fs_extra_1.copy)(fullPath, targetPath);
+        await compileDir(targetPath, options);
     }
 }
 exports.preCompile = preCompile;

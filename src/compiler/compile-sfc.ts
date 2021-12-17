@@ -2,7 +2,7 @@
  * @author: Archy
  * @Date: 2021-12-14 09:58:03
  * @LastEditors: Archy
- * @LastEditTime: 2021-12-16 20:34:10
+ * @LastEditTime: 2021-12-17 11:21:38
  * @FilePath: \ink-cli\src\compiler\compile-sfc.ts
  * @description:
  */
@@ -128,7 +128,7 @@ export async function compileSFC(filePath: string, options?: CompileSFCOpt) {
           options?.styleOptions
         )
       )
-      code = handleStyleImportExt(code)
+      // code = handleStyleImportExt(code)
       writeFileSync(resolve(dir, filename), code, 'utf-8')
       content = `import './${filename}'\n` + content
       style.lang === 'less' && (await compileLess(resolve(dir, filename)))
