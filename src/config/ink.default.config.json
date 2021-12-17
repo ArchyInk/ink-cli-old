@@ -1,0 +1,25 @@
+{
+  "compileConfig": {
+    "babelConfig": {
+      "preset": ["./babel.config.js"]
+    },
+    "jsxOption": {},
+    "jsOption": {},
+    "lessOption": {},
+    "sfcOption": {
+      "template": {},
+      "script": {},
+      "style": {}
+    }
+  },
+  "output": {
+    "esm": "/es",
+    "esmodule": "/es",
+    "cjs": "/lib",
+    "commonjs": "/lib",
+    "umd": "/umd"
+  },
+  "include": ["mock"],
+  "exclude": ["mock/ignore/**/*"],
+  "target": ["umd", "commonjs", "esm"]
+}

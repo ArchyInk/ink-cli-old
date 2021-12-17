@@ -2,7 +2,7 @@
  * @Author: Archy
  * @Date: 2021-12-15 20:12:24
  * @LastEditors: Archy
- * @LastEditTime: 2021-12-17 10:25:58
+ * @LastEditTime: 2021-12-17 15:54:25
  * @FilePath: \ink-cli\src\commands\compile.ts
  * @description:
  */
@@ -34,8 +34,8 @@ export async function compile(cmd: { path: string; optPath: string }) {
   optPath === CONFIG_PATH ? CONFIG_PATH : resolve(CWD, optPath)
   const options = await readJson(optPath, 'utf-8')
   const targets = options?.options?.target || ['commonjs', 'esmodule', 'umd']
-  targets.forEach(async (target) => {
+  for(let target of targets){
     process.env.COMPILE_TARGET = target
-    runTask(target, preCompile, path, options)
-  })
+    await runTask(target, preCompile, path, options)
+  }
 }

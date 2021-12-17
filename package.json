@@ -9,7 +9,7 @@
     "test": "node ./tslib/cli.js"
   },
   "bin": {
-    "ink-cli": "./tslib/cli.js"
+    "ink": "./tslib/cli.js"
   },
   "repository": {
     "type": "git",
@@ -23,6 +23,7 @@
   "homepage": "https://github.com/ArchyInk/ink-cli#readme",
   "devDependencies": {
     "@babel/core": "^7.16.5",
+    "@babel/preset-env": "^7.16.5",
     "@babel/preset-typescript": "^7.16.5",
     "@types/node": "^16.11.12",
     "@vue/compiler-sfc": "^3.2.26",
@@ -31,9 +32,11 @@
     "fs-extra": "^10.0.0",
     "hash-sum": "^2.0.0",
     "less": "^4.1.2",
-    "ora": "^5.4.0"
+    "ora": "^5.4.0",
+    "pkg-dir": "^4.2.0"
   },
   "dependencies": {
-    "@vue/babel-plugin-jsx": "^1.1.1"
+    "@vue/babel-plugin-jsx": "^1.1.1",
+    "find-up": "4.0.0"
   }
 }

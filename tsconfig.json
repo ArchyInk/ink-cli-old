@@ -1,8 +1,7 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
     "outDir": "./tslib",
-    "target": "esnext",
+    "target": "es5",
     "module": "commonJS",
     "sourceMap": false,
     "declaration": true,
