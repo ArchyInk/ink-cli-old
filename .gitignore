@@ -2,3 +2,5 @@ node_modules
 es
 lib
 pnpm-lock.yaml
+tslib
+umd
