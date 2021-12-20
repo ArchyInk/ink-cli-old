@@ -2,7 +2,7 @@
  * @author: Archy
  * @Date: 2021-12-14 09:59:40
  * @LastEditors: Archy
- * @LastEditTime: 2021-12-20 22:36:56
+ * @LastEditTime: 2021-12-20 23:45:52
  * @FilePath: \ink-cli\src\compiler\bundler.ts
  * @description:
  */
@@ -17,14 +17,17 @@ import {
   isLess,
   isFile,
   isJs,
+  isMD,
   normalizePath,
   getTargetDir,
+  isTsx,
+  isTs,
 } from '../shared/utils'
 import { readdir, copy, pathExistsSync, rename } from 'fs-extra'
-import { compileJsx } from './compile-jsx'
+import { compileScript } from './compile-script'
 import { compileLess } from './compile-less'
 import { compileSFC } from './compile-sfc'
-import type { CompileOpt } from '../types/compiler'
+import { compileMd } from './compile-md'
 import { mergeConfig } from '../config/config'
 
 /**
@@ -65,9 +68,11 @@ export async function compileSingFile(filePath) {
  */
 export async function compileFile(file: string) {
   isSFC(file) && (await compileSFC(file))
-  ;(isJsx(file) || isJs(file)) && (await compileJsx(file))
+  ;(isJsx(file) || isTsx(file) || isJs(file) || isTs(file)) &&
+    (await compileScript(file))
   isLess(file) && (await compileLess(file))
   isDir(file) && (await compileDir(file))
+  isMD(file) && (await compileMd(file))
 }
 
 export async function umdCompile() {

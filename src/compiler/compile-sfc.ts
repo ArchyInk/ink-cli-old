@@ -18,7 +18,6 @@ import {
 import { get } from 'lodash'
 import { compileLess } from './compile-less'
 import { parse as path_parse, resolve } from 'path'
-import type { CompileSFCOpt } from '../types/compiler'
 import { mergeConfig } from '../config/config'
 
 // vue2 export default 和 vue3 <script setup>

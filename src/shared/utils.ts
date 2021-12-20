@@ -2,7 +2,7 @@
  * @author: Archy
  * @Date: 2021-12-14 11:26:47
  * @LastEditors: Archy
- * @LastEditTime: 2021-12-20 16:35:00
+ * @LastEditTime: 2021-12-20 23:40:21
  * @FilePath: \ink-cli\src\shared\utils.ts
  * @description:
  */
@@ -35,6 +35,9 @@ export const IMPORT_LESS_REG = /(import\s+['"]\s*.+)\.less(\s*['"])/g
 export const AT_IMPORT_LESS_REG =
   /(@import\s+['"]\s*\.{1,2}\/.+)\.less(\s*['"];)/g
 
+export const REQUIRE_REG =
+  /(require\(['"]\s*\.{1,2}\/.+)\.(vue|jsx|ts|tsx)(\s*['"]\))/g
+
 const jsReplacer = (_: string, p1: string, p2: string): string =>
   `${p1}.js${p2}`
 
@@ -58,6 +61,12 @@ export const replaceImportLessExt = (content: string): string =>
 
 export const replaceAtImportLessExt = (content: string): string =>
   content.replace(AT_IMPORT_LESS_REG, cssReplacer)
+
+export const handleReuireExt = (content: string): string =>
+  content.replace(
+    REQUIRE_REG,
+    (_: string, p1: string, __: string, p3: string) => `${p1}.js${p3}`
+  )
 
 export const handleScriptImportExt = (content: string) => {
   content = replaceImportVueExt(content)
@@ -90,6 +99,8 @@ export const isSFC = (filename: string): boolean => checkType(filename, '.vue')
 export const isJsx = (filename: string): boolean => checkType(filename, '.jsx')
 
 export const isTsx = (filename: string): boolean => checkType(filename, '.tsx')
+
+export const isTs = (filename: string): boolean => checkType(filename, '.ts')
 
 export const isJs = (filename: string): boolean => checkType(filename, '.js')
 
@@ -129,4 +140,5 @@ export const getRootPath = () => {
   return pkg && dirname(pkg)
 }
 
-export const getTargetDir = () => resolve(CWD, mergeConfig().output[process.env.COMPILE_TARGET])
+export const getTargetDir = () =>
+  resolve(CWD, mergeConfig().output[process.env.COMPILE_TARGET])

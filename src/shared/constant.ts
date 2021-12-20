@@ -2,12 +2,11 @@
  * @author: Archy
  * @Date: 2021-12-14 11:15:56
  * @LastEditors: Archy
- * @LastEditTime: 2021-12-20 21:30:12
+ * @LastEditTime: 2021-12-20 22:57:55
  * @FilePath: \ink-cli\src\shared\constant.ts
  * @description:
  */
 import { resolve } from 'path'
-import { mergeConfig } from '../config/config'
 
 export const CWD = process.cwd()
 
