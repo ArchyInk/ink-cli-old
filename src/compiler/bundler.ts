@@ -2,12 +2,13 @@
  * @author: Archy
  * @Date: 2021-12-14 09:59:40
  * @LastEditors: Archy
- * @LastEditTime: 2021-12-20 16:55:28
+ * @LastEditTime: 2021-12-20 22:36:56
  * @FilePath: \ink-cli\src\compiler\bundler.ts
  * @description:
  */
 import { resolve, parse } from 'path'
 import { CWD } from '../shared/constant'
+import { isMatch } from 'nanomatch'
 import {
   removeDir,
   isSFC,
@@ -17,13 +18,12 @@ import {
   isFile,
   isJs,
   normalizePath,
-  getTargetDir
+  getTargetDir,
 } from '../shared/utils'
 import { readdir, copy, pathExistsSync, rename } from 'fs-extra'
 import { compileJsx } from './compile-jsx'
 import { compileLess } from './compile-less'
 import { compileSFC } from './compile-sfc'
-import { compileJs } from './compile-js'
 import type { CompileOpt } from '../types/compiler'
 import { mergeConfig } from '../config/config'
 
@@ -65,14 +65,13 @@ export async function compileSingFile(filePath) {
  */
 export async function compileFile(file: string) {
   isSFC(file) && (await compileSFC(file))
-  // isJs(file) && (await compileJs(file, babelOptions))
-  isJsx(file) && (await compileJsx(file))
+  ;(isJsx(file) || isJs(file)) && (await compileJsx(file))
   isLess(file) && (await compileLess(file))
   isDir(file) && (await compileDir(file))
 }
 
 export async function umdCompile() {
-  console.log('umd compile');
+  console.log('umd compile')
 }
 
 /**
@@ -88,20 +87,28 @@ export async function preCompile() {
     umdCompile()
     return
   }
-  const { include } = mergeConfig()
+  const { include, exclude } = mergeConfig()
   const targetDir = getTargetDir()
   await removeDir(targetDir)
-  include.forEach(async path => {
-    const fullPath = resolve(CWD, path)
-    if (isFile(fullPath)) {
-      // 单个文件的编译结果在文件原位置
-      await compileSingFile(fullPath)
-    } else if (isDir(fullPath)) {
-      // 文件夹的编译结果在配置目标文件夹中
-      const { base } = parse(fullPath)
-      const targetPath = resolve(targetDir, base)
-      await copy(fullPath, targetPath)
-      await compileDir(targetPath)
-    }
-  })
+  await Promise.all(
+    include.map(async (path) => {
+      const fullPath = resolve(CWD, path)
+      if (isFile(fullPath)) {
+        // 单个文件的编译结果在文件原位置
+        return compileSingFile(fullPath)
+      } else if (isDir(fullPath)) {
+        // 文件夹的编译结果在配置目标文件夹中
+        const { base } = parse(fullPath)
+        const targetPath = resolve(targetDir, base)
+        await copy(fullPath, targetPath, {
+          filter: (src, dest) => {
+            const _exclude = exclude.map((_) => normalizePath(resolve(CWD, _)))
+            const _src = normalizePath(src)
+            return !isMatch(_src, _exclude)
+          },
+        })
+        return compileDir(targetPath)
+      }
+    })
+  )
 }

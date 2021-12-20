@@ -2,7 +2,7 @@
  * @author: Archy
  * @Date: 2021-12-14 11:15:56
  * @LastEditors: Archy
- * @LastEditTime: 2021-12-20 16:33:59
+ * @LastEditTime: 2021-12-20 21:30:12
  * @FilePath: \ink-cli\src\shared\constant.ts
  * @description:
  */
@@ -28,5 +28,5 @@ export const CONFIG_DEFAULT_PATH = resolve(
 
 export const INK_CONFIG_REG = /ink\.config\.(json|js|ts)/g
 
-
+export const COMPILE_TARGET_LIST = ['commonjs', 'umd', 'cjs', 'esm', 'esmodule']
 

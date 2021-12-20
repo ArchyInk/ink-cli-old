@@ -2,7 +2,7 @@
  * @author: Archy
  * @Date: 2021-12-17 16:07:44
  * @LastEditors: Archy
- * @LastEditTime: 2021-12-20 17:27:45
+ * @LastEditTime: 2021-12-20 20:56:06
  * @FilePath: \ink-cli\src\config\config.ts
  * @description:
  */
@@ -12,6 +12,7 @@ import { mergeWith, assign, isArray } from 'lodash'
 export const getInkConfig = () => {
   let inkConfig: any = {}
   const inkConfigPath = findup('ink.config.(js|ts)')
+  delete require.cache[require.resolve(inkConfigPath)]
   inkConfig = require(inkConfigPath)
   if (inkConfig['default']) inkConfig = inkConfig.default
   return inkConfig
@@ -27,17 +28,21 @@ export const getDefaultConfig = () => {
 
 const configCustomizer = (inkConfig, defaultConfig, key) => {
   const babelCusomizer = (obj, src) => {
-    if (isArray(obj)) {
-      return obj.concat(src)
+    if (isArray(obj) && isArray(src)) {
+      return src.concat(obj)
     }
   }
   switch (key) {
     case 'include':
     case 'exclude':
-    case 'target': return inkConfig ? inkConfig : defaultConfig;
-    case 'output': return inkConfig && assign({}, defaultConfig, inkConfig)
-    case 'babelConfig': return mergeWith(defaultConfig, inkConfig, babelCusomizer);
+    case 'target':
+      return inkConfig ? inkConfig : defaultConfig
+    case 'output':
+      return inkConfig && assign({}, defaultConfig, inkConfig)
+    case 'babelConfig':
+      return mergeWith(inkConfig, defaultConfig, babelCusomizer)
   }
 }
 
-export const mergeConfig = () => mergeWith(getInkConfig(), getDefaultConfig(), configCustomizer)
+export const mergeConfig = () =>
+  mergeWith(getInkConfig(), getDefaultConfig(), configCustomizer)

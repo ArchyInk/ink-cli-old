@@ -2,13 +2,13 @@
  * @Author: Archy
  * @Date: 2021-12-17 19:35:55
  * @LastEditors: Archy
- * @LastEditTime: 2021-12-20 17:22:14
+ * @LastEditTime: 2021-12-20 20:54:06
  * @FilePath: \ink-cli\src\config\ink.default.config.ts
  * @description:
  */
 const defaultConfig = () => {
   const isCommonJS = process.env.COMPILE_TARGET === 'commonjs' || process.env.COMPILE_TARGET === 'cjs'
-  const babelDefaultConfig = [
+  const babelDefaultPresets = [
     [
       '@babel/preset-env',
       {
@@ -19,7 +19,7 @@ const defaultConfig = () => {
   ]
   return {
     compileConfig: {
-      babelConfig: { presets: babelDefaultConfig },
+      babelConfig: { presets: babelDefaultPresets },
       jsxOption: {},
       jsOption: {},
       lessOption: {},
