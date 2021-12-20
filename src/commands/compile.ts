@@ -2,40 +2,32 @@
  * @Author: Archy
  * @Date: 2021-12-15 20:12:24
  * @LastEditors: Archy
- * @LastEditTime: 2021-12-17 15:54:25
+ * @LastEditTime: 2021-12-20 14:03:21
  * @FilePath: \ink-cli\src\commands\compile.ts
  * @description:
  */
-import { preCompile, compileFile } from '../compiler/bundler'
+import { preCompile } from '../compiler/bundler'
 import ora from 'ora'
-import { readJson } from 'fs-extra'
-import { CONFIG_PATH, CWD, TARGET_DIC } from '../shared/constant'
-import { isFile, } from 'src/shared/utils'
-import { resolve } from 'path'
+import { mergeConfig } from '../config/config'
 
 export async function runTask(
   taskName: string,
-  task: (path: string, options: Object) => Promise<void>,
-  path: string,
-  options?: Object
+  task: Function,
 ) {
   const taskStart = ora().start(`Compiling ${taskName}`)
   try {
-    await task(path, options)
+    await task()
     taskStart.succeed(`Compilation ${taskName} completed!`)
   } catch (e: any) {
-    console.log(e)
+    console.error(e)
     taskStart.fail(`Compilation ${taskName} failed!`)
   }
 }
 
-export async function compile(cmd: { path: string; optPath: string }) {
-  const { path, optPath } = cmd
-  optPath === CONFIG_PATH ? CONFIG_PATH : resolve(CWD, optPath)
-  const options = await readJson(optPath, 'utf-8')
-  const targets = options?.options?.target || ['commonjs', 'esmodule', 'umd']
-  for(let target of targets){
-    process.env.COMPILE_TARGET = target
-    await runTask(target, preCompile, path, options)
-  }
+export async function compile() {
+  const { target } = mergeConfig()
+  target.forEach(async _t => {
+    process.env.COMPILE_TARGET = _t
+    await runTask(_t, preCompile)
+  });
 }

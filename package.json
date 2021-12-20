@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "tsc --watch",
     "build": "tsc",
-    "test": "node ./tslib/config/config.js"
+    "test": "node ./tslib/cli.js"
   },
   "bin": {
     "ink": "./tslib/cli.js"
