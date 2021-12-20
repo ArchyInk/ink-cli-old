@@ -2,7 +2,7 @@
  * @Author: Archy
  * @Date: 2021-12-17 19:35:55
  * @LastEditors: Archy
- * @LastEditTime: 2021-12-20 15:20:09
+ * @LastEditTime: 2021-12-20 16:57:30
  * @FilePath: \ink-cli\ink.config.js
  * @description:
  */
@@ -15,8 +15,4 @@ module.exports = {
   include: ["mock", "mock2"],
   exclude: ["mock/ignore/**/*"],
   target: ["commonjs", "esmodule"],
-  output: {
-    esm: "esm",
-    cjs: "cjs",
-  },
 };

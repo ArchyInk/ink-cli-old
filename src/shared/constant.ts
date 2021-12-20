@@ -2,11 +2,12 @@
  * @author: Archy
  * @Date: 2021-12-14 11:15:56
  * @LastEditors: Archy
- * @LastEditTime: 2021-12-17 20:31:23
+ * @LastEditTime: 2021-12-20 16:33:59
  * @FilePath: \ink-cli\src\shared\constant.ts
  * @description:
  */
 import { resolve } from 'path'
+import { mergeConfig } from '../config/config'
 
 export const CWD = process.cwd()
 
@@ -26,3 +27,6 @@ export const CONFIG_DEFAULT_PATH = resolve(
 )
 
 export const INK_CONFIG_REG = /ink\.config\.(json|js|ts)/g
+
+
+

@@ -2,7 +2,7 @@
  * @Author: Archy
  * @Date: 2021-12-15 20:12:24
  * @LastEditors: Archy
- * @LastEditTime: 2021-12-20 14:03:21
+ * @LastEditTime: 2021-12-20 17:27:18
  * @FilePath: \ink-cli\src\commands\compile.ts
  * @description:
  */
@@ -25,9 +25,12 @@ export async function runTask(
 }
 
 export async function compile() {
-  const { target } = mergeConfig()
-  target.forEach(async _t => {
-    process.env.COMPILE_TARGET = _t
-    await runTask(_t, preCompile)
+  const emun = ['commonjs', 'umd', 'cjs', 'esm', 'esmodule']
+  emun.forEach(async t => {
+    process.env.COMPILE_TARGET = t
+    const { target } = mergeConfig()
+    if (target.includes(t)) {
+      await runTask(t, preCompile)
+    }
   });
 }

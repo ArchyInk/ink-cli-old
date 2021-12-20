@@ -2,15 +2,13 @@
  * @author: Archy
  * @Date: 2021-12-17 16:07:44
  * @LastEditors: Archy
- * @LastEditTime: 2021-12-20 15:24:26
+ * @LastEditTime: 2021-12-20 17:27:45
  * @FilePath: \ink-cli\src\config\config.ts
  * @description:
  */
 import findup from 'findup-sync'
-import { CWD, CONFIG_DEFAULT_PATH } from '../shared/constant'
-import { getRootPath } from '../shared/utils'
-import { readJsonSync } from 'fs-extra'
-import { mergeWith, assign } from 'lodash'
+import { CONFIG_DEFAULT_PATH } from '../shared/constant'
+import { mergeWith, assign, isArray } from 'lodash'
 export const getInkConfig = () => {
   let inkConfig: any = {}
   const inkConfigPath = findup('ink.config.(js|ts)')
@@ -21,19 +19,25 @@ export const getInkConfig = () => {
 
 export const getDefaultConfig = () => {
   let defaultConfig: any = {}
+  delete require.cache[require.resolve(CONFIG_DEFAULT_PATH)]
   defaultConfig = require(CONFIG_DEFAULT_PATH)
   if (defaultConfig['default']) defaultConfig = defaultConfig.default
   return defaultConfig
 }
 
-export const mergeConfig = () => mergeWith(getInkConfig(), getDefaultConfig(), configCustomizer)
-
 const configCustomizer = (inkConfig, defaultConfig, key) => {
-  if (key === 'include' || key === 'exclude' || key === 'target') {
-    return inkConfig ? inkConfig : defaultConfig
+  const babelCusomizer = (obj, src) => {
+    if (isArray(obj)) {
+      return obj.concat(src)
+    }
   }
-  if (key === 'output') {
-    return inkConfig && assign({}, defaultConfig, inkConfig)
+  switch (key) {
+    case 'include':
+    case 'exclude':
+    case 'target': return inkConfig ? inkConfig : defaultConfig;
+    case 'output': return inkConfig && assign({}, defaultConfig, inkConfig)
+    case 'babelConfig': return mergeWith(defaultConfig, inkConfig, babelCusomizer);
   }
-  console.log(defaultConfig);
 }
+
+export const mergeConfig = () => mergeWith(getInkConfig(), getDefaultConfig(), configCustomizer)

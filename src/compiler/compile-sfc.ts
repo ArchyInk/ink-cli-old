@@ -2,7 +2,7 @@
  * @author: Archy
  * @Date: 2021-12-14 09:58:03
  * @LastEditors: Archy
- * @LastEditTime: 2021-12-17 11:21:38
+ * @LastEditTime: 2021-12-20 16:51:40
  * @FilePath: \ink-cli\src\compiler\compile-sfc.ts
  * @description:
  */
@@ -15,9 +15,11 @@ import {
   compileStyle,
   compileScript,
 } from '@vue/compiler-sfc'
+import { get } from 'lodash'
 import { compileLess } from './compile-less'
 import { parse as path_parse, resolve } from 'path'
 import type { CompileSFCOpt } from '../types/compiler'
+import { mergeConfig } from '../config/config'
 
 // vue2 export default 和 vue3 <script setup>
 const NORMAL_EXPORT_DEFAULT_REG = /export\s+default\s+{/
@@ -78,7 +80,7 @@ export function injectRender(
  * @param {any} options
  * @return {*}
  */
-export async function compileSFC(filePath: string, options?: CompileSFCOpt) {
+export async function compileSFC(filePath: string) {
   const content: string = await readFile(filePath, 'utf-8')
   const { descriptor } = parse(content, { sourceMap: false })
   const { script, scriptSetup, template, styles } = descriptor
@@ -93,7 +95,7 @@ export async function compileSFC(filePath: string, options?: CompileSFCOpt) {
   if (script || scriptSetup) {
     let { content } = await compileScript(
       descriptor,
-      Object.assign({ id: scopeId }, options?.scriptOptions)
+      Object.assign({ id: scopeId }, get(mergeConfig(), 'compileConfig.sfcOption.script'))
     )
     const render =
       template &&
@@ -105,7 +107,7 @@ export async function compileSFC(filePath: string, options?: CompileSFCOpt) {
             filename: filePath,
             scoped: hasScope,
           },
-          options?.templateOptions
+          get(mergeConfig(), 'compileConfig.sfcOption.template')
         )
       )
     if (render) {
@@ -125,10 +127,9 @@ export async function compileSFC(filePath: string, options?: CompileSFCOpt) {
             id: scopeId,
             scoped: style.scoped,
           },
-          options?.styleOptions
+          get(mergeConfig(), 'compileConfig.sfcOption.style')
         )
       )
-      // code = handleStyleImportExt(code)
       writeFileSync(resolve(dir, filename), code, 'utf-8')
       content = `import './${filename}'\n` + content
       style.lang === 'less' && (await compileLess(resolve(dir, filename)))

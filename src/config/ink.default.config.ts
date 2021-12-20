@@ -2,12 +2,12 @@
  * @Author: Archy
  * @Date: 2021-12-17 19:35:55
  * @LastEditors: Archy
- * @LastEditTime: 2021-12-20 15:23:28
+ * @LastEditTime: 2021-12-20 17:22:14
  * @FilePath: \ink-cli\src\config\ink.default.config.ts
  * @description:
  */
 const defaultConfig = () => {
-  const isCommonJS = process.env.COMPILE_TARGET === 'commonjs' || 'cjs'
+  const isCommonJS = process.env.COMPILE_TARGET === 'commonjs' || process.env.COMPILE_TARGET === 'cjs'
   const babelDefaultConfig = [
     [
       '@babel/preset-env',

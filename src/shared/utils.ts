@@ -2,11 +2,11 @@
  * @author: Archy
  * @Date: 2021-12-14 11:26:47
  * @LastEditors: Archy
- * @LastEditTime: 2021-12-17 19:55:41
+ * @LastEditTime: 2021-12-20 16:35:00
  * @FilePath: \ink-cli\src\shared\utils.ts
  * @description:
  */
-import { dirname, extname } from 'path'
+import { dirname, extname, resolve } from 'path'
 import {
   pathExistsSync,
   lstatSync,
@@ -15,6 +15,8 @@ import {
   appendFileSync,
 } from 'fs-extra'
 import findUp from 'findup-sync'
+import { mergeConfig } from '../config/config'
+import { CWD } from './constant'
 
 export const IMPORT_VUE_REG =
   /(import\s+.+from\s+['"]\s*\.{1,2}\/.+)\.vue(\s*['"])/g
@@ -126,3 +128,5 @@ export const getRootPath = () => {
   const pkg = findUp('package.json')
   return pkg && dirname(pkg)
 }
+
+export const getTargetDir = () => resolve(CWD, mergeConfig().output[process.env.COMPILE_TARGET])

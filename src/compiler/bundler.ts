@@ -2,14 +2,14 @@
  * @author: Archy
  * @Date: 2021-12-14 09:59:40
  * @LastEditors: Archy
- * @LastEditTime: 2021-12-20 15:07:07
+ * @LastEditTime: 2021-12-20 16:55:28
  * @FilePath: \ink-cli\src\compiler\bundler.ts
  * @description:
  */
 import { resolve, parse } from 'path'
 import { CWD } from '../shared/constant'
 import {
-  removeDirs,
+  removeDir,
   isSFC,
   isJsx,
   isDir,
@@ -17,6 +17,7 @@ import {
   isFile,
   isJs,
   normalizePath,
+  getTargetDir
 } from '../shared/utils'
 import { readdir, copy, pathExistsSync, rename } from 'fs-extra'
 import { compileJsx } from './compile-jsx'
@@ -32,18 +33,14 @@ import { mergeConfig } from '../config/config'
  * @param {CompileOpt} options
  * @return {*}
  */
-export async function compileDir(dir: string, targetDirs) {
-  console.log(parse(dir));
-  // for (let targetDir of targetDirs) {
-  //   await copy(dir, targetDir.map(_=>resolve(_,)))
-  // }
-  // const dirs = await readdir(dir)
-  // await Promise.all(
-  //   dirs.map((filename) => {
-  //     const file = resolve(dir, filename)
-  //     return compileFile(file, options)
-  //   })
-  // )
+export async function compileDir(dir: string) {
+  const dirs = await readdir(dir)
+  await Promise.all(
+    dirs.map((filename) => {
+      const file = resolve(dir, filename)
+      return compileFile(file)
+    })
+  )
 }
 
 /**
@@ -52,11 +49,11 @@ export async function compileDir(dir: string, targetDirs) {
  * @param {CompileOpt} options
  * @return {*}
  */
-export async function compileSingFile(filePath, options?: CompileOpt) {
+export async function compileSingFile(filePath) {
   const { base, dir } = parse(filePath)
   const copyPath = resolve(dir, '_' + base)
   await copy(filePath, copyPath)
-  pathExistsSync(filePath) && (await compileFile(filePath, options))
+  pathExistsSync(filePath) && (await compileFile(filePath))
   await rename(copyPath, resolve(dir, base))
 }
 
@@ -66,13 +63,12 @@ export async function compileSingFile(filePath, options?: CompileOpt) {
  * @param {CompileOpt} options
  * @return {*}
  */
-export async function compileFile(file: string, options?: CompileOpt) {
-  const { sfcOptions, babelConfig, lessOptions } = options
-  isSFC(file) && (await compileSFC(file, sfcOptions))
+export async function compileFile(file: string) {
+  isSFC(file) && (await compileSFC(file))
   // isJs(file) && (await compileJs(file, babelOptions))
-  isJsx(file) && (await compileJsx(file, babelConfig))
-  isLess(file) && (await compileLess(file, lessOptions))
-  isDir(file) && (await compileDir(file, options))
+  isJsx(file) && (await compileJsx(file))
+  isLess(file) && (await compileLess(file))
+  isDir(file) && (await compileDir(file))
 }
 
 export async function umdCompile() {
@@ -86,23 +82,26 @@ export async function umdCompile() {
  * @return {*}
  */
 export async function preCompile() {
-  // if (process.env.COMPILE_TARGET === 'umd') {
-  //   // umd由vite处理
-  //   umdCompile()
-  //   return
-  // }
-  // const { include, output, target } = mergeConfig()
-  // const targetDirs = target.map(_ => resolve(CWD, output[_]))
-  console.log(mergeConfig());
-  // await removeDirs(targetDirs)
-  // include.forEach(async path => {
-  //   const fullPath = resolve(CWD, path)
-  //   if (isFile(fullPath)) {
-  //     // 单个文件的编译结果在文件原位置
-  //     await compileSingFile(fullPath)
-  //   } else if (isDir(fullPath)) {
-  //     // 文件夹的编译结果在配置目标文件夹中
-  //     await compileDir(fullPath, targetDirs)
-  //   }
-  // })
+  const target = process.env.COMPILE_TARGET
+  if (target === 'umd') {
+    // umd由vite处理
+    umdCompile()
+    return
+  }
+  const { include } = mergeConfig()
+  const targetDir = getTargetDir()
+  await removeDir(targetDir)
+  include.forEach(async path => {
+    const fullPath = resolve(CWD, path)
+    if (isFile(fullPath)) {
+      // 单个文件的编译结果在文件原位置
+      await compileSingFile(fullPath)
+    } else if (isDir(fullPath)) {
+      // 文件夹的编译结果在配置目标文件夹中
+      const { base } = parse(fullPath)
+      const targetPath = resolve(targetDir, base)
+      await copy(fullPath, targetPath)
+      await compileDir(targetPath)
+    }
+  })
 }
