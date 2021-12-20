@@ -2,13 +2,12 @@
  * @author: Archy
  * @Date: 2021-12-14 09:53:57
  * @LastEditors: Archy
- * @LastEditTime: 2021-12-17 19:43:21
+ * @LastEditTime: 2021-12-20 23:48:58
  * @FilePath: \ink-cli\src\cli.ts
  * @description:
  */
 import { Command } from 'commander'
 import { compile } from './commands'
-import { SRC_DIR, CWD } from './shared/constant'
 const program = new Command()
 program
   .command('compile')
