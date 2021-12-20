@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "tsc --watch",
     "build": "tsc",
-    "test": "node ./tslib/cli.js"
+    "test": "node ./tslib/config/config.js"
   },
   "bin": {
     "ink": "./tslib/cli.js"
@@ -29,14 +29,15 @@
     "@vue/compiler-sfc": "^3.2.26",
     "commander": "^8.3.0",
     "execa": "^6.0.0",
+    "findup-sync": "^5.0.0",
     "fs-extra": "^10.0.0",
     "hash-sum": "^2.0.0",
     "less": "^4.1.2",
+    "lodash": "^4.17.21",
     "ora": "^5.4.0",
     "pkg-dir": "^4.2.0"
   },
   "dependencies": {
-    "@vue/babel-plugin-jsx": "^1.1.1",
-    "find-up": "4.0.0"
+    "@vue/babel-plugin-jsx": "^1.1.1"
   }
 }

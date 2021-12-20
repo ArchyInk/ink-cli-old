@@ -1,8 +1,0 @@
-{
-  "babelConfig": {
-    "plugins": ["@vue/babel-plugin-jsx"]
-  },
-  "sfcOptions": {},
-  "lessOptions": {},
-  "options": {}
-}

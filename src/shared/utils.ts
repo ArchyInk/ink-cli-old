@@ -2,7 +2,7 @@
  * @author: Archy
  * @Date: 2021-12-14 11:26:47
  * @LastEditors: Archy
- * @LastEditTime: 2021-12-17 16:47:24
+ * @LastEditTime: 2021-12-17 19:55:41
  * @FilePath: \ink-cli\src\shared\utils.ts
  * @description:
  */
@@ -14,7 +14,7 @@ import {
   readFileSync,
   appendFileSync,
 } from 'fs-extra'
-import findUp from 'find-up'
+import findUp from 'findup-sync'
 
 export const IMPORT_VUE_REG =
   /(import\s+.+from\s+['"]\s*\.{1,2}\/.+)\.vue(\s*['"])/g
@@ -122,7 +122,7 @@ export const easyAppendFileSync = (filename: string, content: string) => {
   c.includes(content) || appendFileSync(filename, content)
 }
 
-export const getRootPath = async () => {
-  const pkg = await findUp('package.json')
+export const getRootPath = () => {
+  const pkg = findUp('package.json')
   return pkg && dirname(pkg)
 }
