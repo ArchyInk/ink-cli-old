@@ -1,28 +1,28 @@
 {
-  "name": "ink-cli",
-  "version": "1.0.0",
+  "name": "@archybool/ink-cli",
+  "version": "1.0.1",
   "description": "",
-  "main": "index.js",
   "scripts": {
     "dev": "tsc --watch",
-    "build": "tsc",
-    "test": "node ./tslib/cli.js"
+    "build": "tsc"
   },
   "bin": {
-    "ink": "./tslib/cli.js"
+    "ink-cli": "./lib/index.js"
   },
+  "files": [
+    "lib"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ArchyInk/ink-cli.git"
   },
-  "author": "archy",
-  "license": "ISC",
+  "author": "archybool",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/ArchyInk/ink-cli/issues"
   },
   "homepage": "https://github.com/ArchyInk/ink-cli#readme",
   "devDependencies": {
-    "@babel/core": "^7.16.5",
     "@babel/preset-env": "^7.16.5",
     "@babel/preset-typescript": "^7.16.5",
     "@types/node": "^16.11.12",
@@ -34,12 +34,12 @@
     "hash-sum": "^2.0.0",
     "less": "^4.1.2",
     "lodash": "^4.17.21",
-    "micromatch": "^4.0.4",
     "nanomatch": "^1.2.13",
     "ora": "^5.4.0",
     "pkg-dir": "^4.2.0"
   },
   "dependencies": {
+    "@babel/core": "^7.16.5",
     "@vue/babel-plugin-jsx": "^1.1.1",
     "marked": "^4.0.8"
   }

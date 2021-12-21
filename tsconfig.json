@@ -1,9 +1,10 @@
 {
   "compilerOptions": {
-    "outDir": "./tslib",
+    "outDir": "./lib",
     "target": "es5",
     "module": "commonJS",
     "sourceMap": false,
+    "downlevelIteration": true,
     "declaration": true,
     "skipLibCheck": true,
     "esModuleInterop": true,

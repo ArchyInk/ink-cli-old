@@ -5,3 +5,4 @@ pnpm-lock.yaml
 tslib
 umd
 yarn.lock
+ink.config.js

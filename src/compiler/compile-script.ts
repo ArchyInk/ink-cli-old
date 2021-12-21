@@ -2,7 +2,7 @@
  * @author: Archy
  * @Date: 2021-12-14 09:57:11
  * @LastEditors: Archy
- * @LastEditTime: 2021-12-20 23:45:29
+ * @LastEditTime: 2021-12-21 10:15:14
  * @FilePath: \ink-cli\src\compiler\compile-script.ts
  * @description:
  */

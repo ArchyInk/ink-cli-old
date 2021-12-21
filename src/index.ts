@@ -1,10 +1,10 @@
 /*
  * @author: Archy
- * @Date: 2021-12-14 09:53:57
+ * @Date: 2021-12-21 10:27:16
  * @LastEditors: Archy
- * @LastEditTime: 2021-12-20 23:48:58
- * @FilePath: \ink-cli\src\cli.ts
- * @description:
+ * @LastEditTime: 2021-12-21 10:29:03
+ * @FilePath: \ink-cli\src\index.ts
+ * @description: 
  */
 import { Command } from 'commander'
 import { compile } from './commands'
