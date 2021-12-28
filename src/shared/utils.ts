@@ -2,7 +2,7 @@
  * @author: Archy
  * @Date: 2021-12-14 11:26:47
  * @LastEditors: Archy
- * @LastEditTime: 2021-12-20 23:40:21
+ * @LastEditTime: 2021-12-22 21:29:45
  * @FilePath: \ink-cli\src\shared\utils.ts
  * @description:
  */
@@ -141,4 +141,4 @@ export const getRootPath = () => {
 }
 
 export const getTargetDir = () =>
-  resolve(CWD, mergeConfig().output[process.env.COMPILE_TARGET])
+  resolve(CWD, mergeConfig().compileConfig.output[process.env.COMPILE_TARGET])

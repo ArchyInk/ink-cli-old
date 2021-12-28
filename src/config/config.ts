@@ -2,13 +2,15 @@
  * @author: Archy
  * @Date: 2021-12-17 16:07:44
  * @LastEditors: Archy
- * @LastEditTime: 2021-12-20 20:56:06
+ * @LastEditTime: 2021-12-22 22:11:10
  * @FilePath: \ink-cli\src\config\config.ts
  * @description:
  */
 import findup from 'findup-sync'
-import { CONFIG_DEFAULT_PATH } from '../shared/constant'
+import { CONFIG_DEFAULT_PATH, CWD } from '../shared/constant'
 import { mergeWith, assign, isArray } from 'lodash'
+import { InlineConfig } from 'vite'
+import { resolve } from 'path'
 export const getInkConfig = () => {
   let inkConfig: any = {}
   const inkConfigPath = findup('ink.config.(js|ts)')
@@ -33,6 +35,8 @@ const configCustomizer = (inkConfig, defaultConfig, key) => {
     }
   }
   switch (key) {
+    case 'name':
+    case 'entry':
     case 'include':
     case 'exclude':
     case 'target':
@@ -41,6 +45,34 @@ const configCustomizer = (inkConfig, defaultConfig, key) => {
       return inkConfig && assign({}, defaultConfig, inkConfig)
     case 'babelConfig':
       return mergeWith(inkConfig, defaultConfig, babelCusomizer)
+  }
+}
+
+export const getUMDConfig = (): InlineConfig => {
+  const {
+    name,
+    compileConfig: { output },
+    entry,
+  } = mergeConfig()
+  return {
+    build: {
+      emptyOutDir: true,
+      lib: {
+        name,
+        entry: resolve(CWD, entry),
+        fileName: (format) => `${name}.${format}.js`,
+      },
+      rollupOptions: {
+        external: ['vue'],
+        output: {
+          dir: output['umd'],
+          exports: 'named',
+          globals: {
+            vue: 'Vue',
+          },
+        },
+      },
+    },
   }
 }
 

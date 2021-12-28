@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /*
  * @author: Archy
  * @Date: 2021-12-21 10:27:16
@@ -6,9 +7,13 @@
  * @FilePath: \ink-cli\src\index.ts
  * @description: 
  */
+=======
+#!/usr/bin/env node
+>>>>>>> 4e68611be46e82ab9c66085c2b2e0aabf5dad4bb
 import { Command } from 'commander'
 import { compile } from './commands'
 const program = new Command()
+program.version(`ink-cli ${require('../package.json').version}`).usage('<command> [options]')
 program
   .command('compile')
   .description('Compile dir')

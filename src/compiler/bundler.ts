@@ -2,7 +2,7 @@
  * @author: Archy
  * @Date: 2021-12-14 09:59:40
  * @LastEditors: Archy
- * @LastEditTime: 2021-12-20 23:45:52
+ * @LastEditTime: 2021-12-22 22:05:18
  * @FilePath: \ink-cli\src\compiler\bundler.ts
  * @description:
  */
@@ -28,7 +28,8 @@ import { compileScript } from './compile-script'
 import { compileLess } from './compile-less'
 import { compileSFC } from './compile-sfc'
 import { compileMd } from './compile-md'
-import { mergeConfig } from '../config/config'
+import { getUMDConfig, mergeConfig } from '../config/config'
+import { build } from 'vite'
 
 /**
  * @description: 编译文件夹
@@ -76,7 +77,11 @@ export async function compileFile(file: string) {
 }
 
 export async function umdCompile() {
-  console.log('umd compile')
+  return new Promise<void>((resolve, reject) => {
+    build(getUMDConfig())
+      .then(() => resolve())
+      .catch(reject)
+  })
 }
 
 /**
@@ -92,7 +97,9 @@ export async function preCompile() {
     umdCompile()
     return
   }
-  const { include, exclude } = mergeConfig()
+  const {
+    compileConfig: { include, exclude },
+  } = mergeConfig()
   const targetDir = getTargetDir()
   await removeDir(targetDir)
   await Promise.all(
