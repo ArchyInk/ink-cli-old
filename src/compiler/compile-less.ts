@@ -2,7 +2,7 @@
  * @author: Archy
  * @Date: 2021-12-14 09:57:28
  * @LastEditors: Archy
- * @LastEditTime: 2021-12-20 16:54:18
+ * @LastEditTime: 2022-03-15 17:03:18
  * @FilePath: \ink-cli\src\compiler\compile-less.ts
  * @description: 
  */
@@ -18,3 +18,4 @@ export async function compileLess(filePath: string) {
   // removeSync(filePath)
   writeFileSync(replaceExt(filePath, '.css'), css, 'utf-8')
 }
+

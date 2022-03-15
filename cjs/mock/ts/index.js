@@ -1,3 +1,5 @@
+"use strict";
+
 /*
  * @Author: Archy
  * @Date: 2021-12-17 19:35:55
@@ -6,5 +8,4 @@
  * @FilePath: \ink-cli\mock\ts\index.ts
  * @description: 
  */
-type Test = 'img' | 'jpg'
-const test: Test = 'img'
+var test = 'img';
