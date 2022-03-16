@@ -2,12 +2,12 @@
  * @author: Archy
  * @Date: 2021-12-14 09:57:11
  * @LastEditors: Archy
- * @LastEditTime: 2021-12-21 10:15:14
+ * @LastEditTime: 2022-03-16 10:25:35
  * @FilePath: \ink-cli\src\compiler\compile-script.ts
  * @description:
  */
 import { readFile, removeSync, writeFileSync } from 'fs-extra'
-import { transformAsync } from '@babel/core'
+import { transformAsync, TransformOptions } from '@babel/core'
 import {
   handleScriptImportExt,
   replaceExt,
@@ -15,7 +15,7 @@ import {
 } from '../shared/utils'
 import { get } from 'lodash'
 import { mergeConfig } from '../config/config'
-export const compileScript = async (filePath: string) => {
+export const compileScriptFile = async (filePath: string) => {
   try {
     let content = await readFile(filePath, 'utf-8')
     content = handleScriptImportExt(content)
@@ -29,5 +29,16 @@ export const compileScript = async (filePath: string) => {
     writeFileSync(replaceExt(filePath, '.js'), res.code)
   } catch (err) {
     throw err
+  }
+}
+
+export const compileScript = async (content: string, babelConfig?: TransformOptions) => {
+  try {
+    content = handleScriptImportExt(content)
+    content = handleReuireExt(content)
+    const { code } = await transformAsync(content, babelConfig)
+    return code
+  } catch (err) {
+    throw new Error('[ink-cli] compile script error.')
   }
 }

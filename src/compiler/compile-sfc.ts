@@ -2,7 +2,7 @@
  * @author: Archy
  * @Date: 2021-12-14 09:58:03
  * @LastEditors: Archy
- * @LastEditTime: 2021-12-20 16:51:40
+ * @LastEditTime: 2022-03-16 10:33:40
  * @FilePath: \ink-cli\src\compiler\compile-sfc.ts
  * @description:
  */
@@ -14,9 +14,11 @@ import {
   compileTemplate,
   compileStyle,
   compileScript,
+  SFCScriptCompileOptions,
+  SFCTemplateCompileOptions,
 } from '@vue/compiler-sfc'
 import { get } from 'lodash'
-import { compileLess } from './compile-less'
+import { compileLess, compileLessFile } from './compile-less'
 import { parse as path_parse, resolve } from 'path'
 import { mergeConfig } from '../config/config'
 
@@ -79,7 +81,7 @@ export function injectRender(
  * @param {any} options
  * @return {*}
  */
-export async function compileSFC(filePath: string) {
+export async function compileSFCFile(filePath: string) {
   const content: string = await readFile(filePath, 'utf-8')
   const { descriptor } = parse(content, { sourceMap: false })
   const { script, scriptSetup, template, styles } = descriptor
@@ -92,7 +94,7 @@ export async function compileSFC(filePath: string) {
   const hasScope = styles.some((style) => style.scoped)
   const scopeId = hasScope ? `data-v-${id}` : ''
   if (script || scriptSetup) {
-    let { content } = await compileScript(
+    let { content } = compileScript(
       descriptor,
       Object.assign({ id: scopeId }, get(mergeConfig(), 'compileConfig.sfcOption.script'))
     )
@@ -104,7 +106,7 @@ export async function compileSFC(filePath: string) {
             id,
             source: template.content,
             filename: filePath,
-            scoped: hasScope,
+            scopeId: hasScope,
           },
           get(mergeConfig(), 'compileConfig.sfcOption.template')
         )
@@ -131,9 +133,31 @@ export async function compileSFC(filePath: string) {
       )
       writeFileSync(resolve(dir, filename), code, 'utf-8')
       content = `import './${filename}'\n` + content
-      style.lang === 'less' && (await compileLess(resolve(dir, filename)))
+      style.lang === 'less' && (await compileLessFile(resolve(dir, filename)))
     })
     content = handleScriptImportExt(content)
     writeFileSync(fileCompiledName, content, 'utf-8')
   }
+}
+
+export const compileSFC = async (content: string, options?: { scriptOptions: SFCScriptCompileOptions, templateOptions: SFCTemplateCompileOptions }) => {
+  const { descriptor } = parse(content, { sourceMap: false })
+  const { script, scriptSetup, template, styles } = descriptor
+  const id = hash(content)
+  const hasScope = styles.some((style) => style.scoped)
+  const scopeId = hasScope ? `data-v-${id}` : ''
+  let result = ''
+  if (script || scriptSetup) {
+    let { content } = compileScript(descriptor, Object.assign({ id: scopeId, ...options?.scriptOptions }))
+    const render = template && compileTemplate(Object.assign({
+      id,
+      source: template.content,
+      scopeId: hasScope
+    }, options?.templateOptions))
+    if (render) {
+      content = injectRender(content, render.code, scopeId)
+    }
+    result = handleScriptImportExt(content)
+  }
+  return result
 }

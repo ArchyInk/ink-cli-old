@@ -2,7 +2,7 @@
  * @author: Archy
  * @Date: 2021-12-14 09:59:40
  * @LastEditors: Archy
- * @LastEditTime: 2021-12-22 22:05:18
+ * @LastEditTime: 2022-03-16 09:43:14
  * @FilePath: \ink-cli\src\compiler\bundler.ts
  * @description:
  */
@@ -24,10 +24,10 @@ import {
   isTs,
 } from '../shared/utils'
 import { readdir, copy, pathExistsSync, rename } from 'fs-extra'
-import { compileScript } from './compile-script'
-import { compileLess } from './compile-less'
-import { compileSFC } from './compile-sfc'
-import { compileMd } from './compile-md'
+import { compileScriptFile } from './compile-script'
+import { compileLessFile } from './compile-less'
+import { compileSFCFile } from './compile-sfc'
+import { compileMdFile } from './compile-md'
 import { getUMDConfig, mergeConfig } from '../config/config'
 import { build } from 'vite'
 
@@ -68,12 +68,12 @@ export async function compileSingFile(filePath) {
  * @return {*}
  */
 export async function compileFile(file: string) {
-  isSFC(file) && (await compileSFC(file))
+  isSFC(file) && (await compileSFCFile(file))
   ;(isJsx(file) || isTsx(file) || isJs(file) || isTs(file)) &&
-    (await compileScript(file))
-  isLess(file) && (await compileLess(file))
+    (await compileScriptFile(file))
+  isLess(file) && (await compileLessFile(file))
   isDir(file) && (await compileDir(file))
-  isMD(file) && (await compileMd(file))
+  isMD(file) && (await compileMdFile(file))
 }
 
 export async function umdCompile() {
