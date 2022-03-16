@@ -1,8 +1,9 @@
+#!/usr/bin/env node
 /*
  * @author: Archy
  * @Date: 2021-12-21 10:27:16
  * @LastEditors: Archy
- * @LastEditTime: 2022-01-28 14:50:35
+ * @LastEditTime: 2022-03-16 10:39:33
  * @FilePath: \ink-cli\src\index.ts
  * @description: 
  */
