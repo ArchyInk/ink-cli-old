@@ -2,7 +2,7 @@
  * @author: Archy
  * @Date: 2021-12-17 16:07:44
  * @LastEditors: Archy
- * @LastEditTime: 2022-03-16 11:18:11
+ * @LastEditTime: 2022-03-16 11:40:29
  * @FilePath: \ink-cli\src\config\config.ts
  * @description:
  */
@@ -14,7 +14,10 @@ import { resolve } from 'path'
 export const getInkConfig = () => {
   let inkConfig: any = {}
   const inkConfigPath = findup('ink.config.(js|ts)')
-  inkConfigPath && delete require.cache[require.resolve(inkConfigPath)]
+  if (!inkConfigPath) {
+    return inkConfig
+  }
+  delete require.cache[require.resolve(inkConfigPath)]
   inkConfig = require(inkConfigPath)
   if (inkConfig['default']) inkConfig = inkConfig.default
   return inkConfig
