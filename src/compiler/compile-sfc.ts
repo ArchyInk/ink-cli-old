@@ -2,7 +2,7 @@
  * @author: Archy
  * @Date: 2021-12-14 09:58:03
  * @LastEditors: Archy
- * @LastEditTime: 2022-03-16 10:33:40
+ * @LastEditTime: 2022-03-16 11:16:15
  * @FilePath: \ink-cli\src\compiler\compile-sfc.ts
  * @description:
  */
@@ -86,11 +86,6 @@ export async function compileSFCFile(filePath: string) {
   const { descriptor } = parse(content, { sourceMap: false })
   const { script, scriptSetup, template, styles } = descriptor
   const id = hash(content)
-  writeFileSync(
-    resolve(process.cwd(), 'parse'),
-    JSON.stringify(descriptor),
-    'utf-8'
-  )
   const hasScope = styles.some((style) => style.scoped)
   const scopeId = hasScope ? `data-v-${id}` : ''
   if (script || scriptSetup) {
