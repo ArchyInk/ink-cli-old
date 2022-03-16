@@ -2,7 +2,7 @@
  * @author: Archy
  * @Date: 2021-12-14 09:58:03
  * @LastEditors: Archy
- * @LastEditTime: 2022-03-16 11:16:15
+ * @LastEditTime: 2022-03-16 13:56:54
  * @FilePath: \ink-cli\src\compiler\compile-sfc.ts
  * @description:
  */
@@ -16,6 +16,7 @@ import {
   compileScript,
   SFCScriptCompileOptions,
   SFCTemplateCompileOptions,
+  SFCStyleCompileOptions,
 } from '@vue/compiler-sfc'
 import { get } from 'lodash'
 import { compileLess, compileLessFile } from './compile-less'
@@ -81,7 +82,7 @@ export function injectRender(
  * @param {any} options
  * @return {*}
  */
-export async function compileSFCFile(filePath: string) {
+export async function compileSFCFile(filePath: string, options?: { retainSourceFile?: boolean, scriptCompileOptions?: SFCScriptCompileOptions, templateCompileOptions?: SFCTemplateCompileOptions, styleCompileOptions?: SFCStyleCompileOptions }) {
   const content: string = await readFile(filePath, 'utf-8')
   const { descriptor } = parse(content, { sourceMap: false })
   const { script, scriptSetup, template, styles } = descriptor
@@ -91,7 +92,7 @@ export async function compileSFCFile(filePath: string) {
   if (script || scriptSetup) {
     let { content } = compileScript(
       descriptor,
-      Object.assign({ id: scopeId }, get(mergeConfig(), 'compileConfig.sfcOption.script'))
+      Object.assign({ id: scopeId }, options?.scriptCompileOptions ? options?.scriptCompileOptions : get(mergeConfig(), 'compileConfig.sfcOption.script'))
     )
     const render =
       template &&
@@ -103,14 +104,14 @@ export async function compileSFCFile(filePath: string) {
             filename: filePath,
             scopeId: hasScope,
           },
-          get(mergeConfig(), 'compileConfig.sfcOption.template')
+          options?.templateCompileOptions ? options?.templateCompileOptions : get(mergeConfig(), 'compileConfig.sfcOption.template')
         )
       )
     if (render) {
       const { code } = render
       content = injectRender(content, code, scopeId)
     }
-    removeSync(filePath)
+    !options?.retainSourceFile && removeSync(filePath)
     const fileCompiledName = replaceExt(filePath, '.js')
     styles.forEach(async (style, index) => {
       const { dir, base } = path_parse(filePath)
@@ -123,7 +124,7 @@ export async function compileSFCFile(filePath: string) {
             id: scopeId,
             scoped: style.scoped,
           },
-          get(mergeConfig(), 'compileConfig.sfcOption.style')
+          options?.styleCompileOptions ? options?.styleCompileOptions : get(mergeConfig(), 'compileConfig.sfcOption.style')
         )
       )
       writeFileSync(resolve(dir, filename), code, 'utf-8')
@@ -135,7 +136,7 @@ export async function compileSFCFile(filePath: string) {
   }
 }
 
-export const compileSFC = async (content: string, options?: { scriptOptions: SFCScriptCompileOptions, templateOptions: SFCTemplateCompileOptions }) => {
+export const compileSFC = async (content: string, options?: { scriptCompileOptions?: SFCScriptCompileOptions, templateCompileOptions?: SFCTemplateCompileOptions }) => {
   const { descriptor } = parse(content, { sourceMap: false })
   const { script, scriptSetup, template, styles } = descriptor
   const id = hash(content)
@@ -143,12 +144,12 @@ export const compileSFC = async (content: string, options?: { scriptOptions: SFC
   const scopeId = hasScope ? `data-v-${id}` : ''
   let result = ''
   if (script || scriptSetup) {
-    let { content } = compileScript(descriptor, Object.assign({ id: scopeId, ...options?.scriptOptions }))
+    let { content } = compileScript(descriptor, Object.assign({ id: scopeId, ...options?.scriptCompileOptions }))
     const render = template && compileTemplate(Object.assign({
       id,
       source: template.content,
       scopeId: hasScope
-    }, options?.templateOptions))
+    }, options?.templateCompileOptions))
     if (render) {
       content = injectRender(content, render.code, scopeId)
     }

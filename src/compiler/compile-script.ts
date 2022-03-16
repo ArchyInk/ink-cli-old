@@ -2,7 +2,7 @@
  * @author: Archy
  * @Date: 2021-12-14 09:57:11
  * @LastEditors: Archy
- * @LastEditTime: 2022-03-16 10:25:35
+ * @LastEditTime: 2022-03-16 13:46:34
  * @FilePath: \ink-cli\src\compiler\compile-script.ts
  * @description:
  */
@@ -15,28 +15,28 @@ import {
 } from '../shared/utils'
 import { get } from 'lodash'
 import { mergeConfig } from '../config/config'
-export const compileScriptFile = async (filePath: string) => {
+export const compileScriptFile = async (filePath: string, options?: TransformOptions & { retainSourceFile?: boolean }) => {
   try {
     let content = await readFile(filePath, 'utf-8')
     content = handleScriptImportExt(content)
     content = handleReuireExt(content)
-    const babelConfig = get(mergeConfig(), 'compileConfig.babelConfig')
+    const babelConfig = options ? options : get(mergeConfig(), 'compileConfig.babelConfig')
     const res = await transformAsync(content, {
       filename: filePath,
       ...babelConfig,
     })
-    removeSync(filePath)
+    !options?.retainSourceFile && removeSync(filePath)
     writeFileSync(replaceExt(filePath, '.js'), res.code)
   } catch (err) {
     throw err
   }
 }
 
-export const compileScript = async (content: string, babelConfig?: TransformOptions) => {
+export const compileScript = async (content: string, options?: TransformOptions) => {
   try {
     content = handleScriptImportExt(content)
     content = handleReuireExt(content)
-    const { code } = await transformAsync(content, babelConfig)
+    const { code } = await transformAsync(content, options)
     return code
   } catch (err) {
     throw new Error('[ink-cli] compile script error.')
