@@ -2,7 +2,7 @@
  * @Author: Archy
  * @Date: 2021-12-15 20:12:24
  * @LastEditors: Archy
- * @LastEditTime: 2022-01-27 11:04:19
+ * @LastEditTime: 2022-05-18 09:53:13
  * @FilePath: \ink-cli\src\commands\compile.ts
  * @description:
  */
@@ -20,14 +20,15 @@ export async function runTask(taskName: string, task: Function) {
     console.error(e)
     compile.fail(`Compilation ${taskName} failed!`)
   }
-} 
+}
 
 export async function compile() {
   for (let t of COMPILE_TARGET_LIST) {
     process.env.COMPILE_TARGET = t
+    const config = mergeConfig()
     const {
       compileConfig: { target },
-    } = mergeConfig()
+    } = config
     if (target.includes(t)) {
       await runTask(t, preCompile)
     }

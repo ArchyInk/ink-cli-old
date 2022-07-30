@@ -2,7 +2,7 @@
  * @author: Archy
  * @Date: 2021-12-14 09:58:03
  * @LastEditors: Archy
- * @LastEditTime: 2022-03-16 13:56:54
+ * @LastEditTime: 2022-03-16 14:38:59
  * @FilePath: \ink-cli\src\compiler\compile-sfc.ts
  * @description:
  */
@@ -102,7 +102,7 @@ export async function compileSFCFile(filePath: string, options?: { retainSourceF
             id,
             source: template.content,
             filename: filePath,
-            scopeId: hasScope,
+            scoped: hasScope,
           },
           options?.templateCompileOptions ? options?.templateCompileOptions : get(mergeConfig(), 'compileConfig.sfcOption.template')
         )

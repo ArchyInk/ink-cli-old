@@ -1,6 +1,5 @@
-.mock-extend {
-  background: #111;
-}
+
+@import "../less/extend.less";
 .rect[data-v-7186670d] {
   height: 100px;
   width: 100px;

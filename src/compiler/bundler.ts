@@ -2,7 +2,7 @@
  * @author: Archy
  * @Date: 2021-12-14 09:59:40
  * @LastEditors: Archy
- * @LastEditTime: 2022-03-16 09:43:14
+ * @LastEditTime: 2022-07-01 09:28:12
  * @FilePath: \ink-cli\src\compiler\bundler.ts
  * @description:
  */
@@ -110,7 +110,7 @@ export async function preCompile() {
         return compileSingFile(fullPath)
       } else if (isDir(fullPath)) {
         // 文件夹的编译结果在配置目标文件夹中
-        const { base } = parse(fullPath)
+        const { base } = parse(fullPath) 
         const targetPath = resolve(targetDir, base)
         await copy(fullPath, targetPath, {
           filter: (src, dest) => {
