@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "tsc --watch",
     "build": "tsc",
-    "test": "node ./lib/index.js"
+    "test-node": "node ./lib/index.js"
   },
   "bin": {
     "ink-cli": "./lib/index.js"
