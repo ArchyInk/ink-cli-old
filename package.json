@@ -17,6 +17,9 @@
     "type": "git",
     "url": "git+https://github.com/ArchyInk/ink-cli.git"
   },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
   "author": "archybool",
   "license": "MIT",
   "bugs": {
