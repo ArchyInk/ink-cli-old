@@ -1,6 +1,6 @@
 {
   "name": "@archybool/ink-cli",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "description": "",
   "scripts": {
     "dev": "tsc --watch",
@@ -28,7 +28,7 @@
   "homepage": "https://github.com/ArchyInk/ink-cli#readme",
   "dependencies": {
     "@babel/core": "^7.16.5",
-    "@babel/preset-env": "^7.16.5", 
+    "@babel/preset-env": "^7.16.5",
     "@babel/preset-typescript": "^7.16.5",
     "@types/node": "^16.11.12",
     "@vue/babel-plugin-jsx": "^1.1.1",
