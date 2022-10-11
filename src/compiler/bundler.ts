@@ -2,7 +2,7 @@
  * @author: Archy
  * @Date: 2021-12-14 09:59:40
  * @LastEditors: Archy
- * @LastEditTime: 2022-07-01 09:28:12
+ * @LastEditTime: 2022-10-11 14:47:19
  * @FilePath: \ink-cli\src\compiler\bundler.ts
  * @description:
  */
@@ -30,6 +30,7 @@ import { compileSFCFile } from './compile-sfc'
 import { compileMdFile } from './compile-md'
 import { getUMDConfig, mergeConfig } from '../config/config'
 import { build } from 'vite'
+
 
 /**
  * @description: 编译文件夹
@@ -69,8 +70,8 @@ export async function compileSingFile(filePath) {
  */
 export async function compileFile(file: string) {
   isSFC(file) && (await compileSFCFile(file))
-  ;(isJsx(file) || isTsx(file) || isJs(file) || isTs(file)) &&
-    (await compileScriptFile(file))
+    ; (isJsx(file) || isTsx(file) || isJs(file) || isTs(file)) &&
+      (await compileScriptFile(file))
   isLess(file) && (await compileLessFile(file))
   isDir(file) && (await compileDir(file))
   isMD(file) && (await compileMdFile(file))
@@ -101,6 +102,7 @@ export async function preCompile() {
     compileConfig: { include, exclude },
   } = mergeConfig()
   const targetDir = getTargetDir()
+  const singleDir = include.length === 1
   await removeDir(targetDir)
   await Promise.all(
     include.map(async (path) => {
@@ -110,8 +112,11 @@ export async function preCompile() {
         return compileSingFile(fullPath)
       } else if (isDir(fullPath)) {
         // 文件夹的编译结果在配置目标文件夹中
-        const { base } = parse(fullPath) 
-        const targetPath = resolve(targetDir, base)
+        let targetPath = targetDir
+        if (!singleDir) {
+          const { base } = parse(fullPath)
+          targetPath = resolve(targetDir, base)
+        }
         await copy(fullPath, targetPath, {
           filter: (src, dest) => {
             const _exclude = exclude.map((_) => normalizePath(resolve(CWD, _)))
