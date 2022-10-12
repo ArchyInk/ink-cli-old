@@ -2,7 +2,7 @@
  * @author: Archy
  * @Date: 2021-12-14 09:59:40
  * @LastEditors: Archy
- * @LastEditTime: 2022-10-11 14:47:19
+ * @LastEditTime: 2022-10-12 16:13:04
  * @FilePath: \ink-cli\src\compiler\bundler.ts
  * @description:
  */
@@ -22,6 +22,7 @@ import {
   getTargetDir,
   isTsx,
   isTs,
+  isDts,
 } from '../shared/utils'
 import { readdir, copy, pathExistsSync, rename } from 'fs-extra'
 import { compileScriptFile } from './compile-script'
@@ -62,6 +63,7 @@ export async function compileSingFile(filePath) {
   await rename(copyPath, resolve(dir, base))
 }
 
+
 /**
  * @description: 编译文件
  * @param {string} file
@@ -69,12 +71,12 @@ export async function compileSingFile(filePath) {
  * @return {*}
  */
 export async function compileFile(file: string) {
-  isSFC(file) && (await compileSFCFile(file))
-    ; (isJsx(file) || isTsx(file) || isJs(file) || isTs(file)) &&
-      (await compileScriptFile(file))
-  isLess(file) && (await compileLessFile(file))
-  isDir(file) && (await compileDir(file))
-  isMD(file) && (await compileMdFile(file))
+  if (isDts(file)) return
+  if (isSFC(file)) { await compileSFCFile(file) }
+  if (isJsx(file) || isTsx(file) || isJs(file) || isTs(file)) { await compileScriptFile(file) }
+  if (isLess(file)) { await compileLessFile(file) }
+  if (isDir(file)) { await compileDir(file) }
+  if (isMD(file)) { await compileMdFile(file) }
 }
 
 export async function umdCompile() {

@@ -2,7 +2,7 @@
  * @author: Archy
  * @Date: 2021-12-14 11:26:47
  * @LastEditors: Archy
- * @LastEditTime: 2022-10-11 14:25:48
+ * @LastEditTime: 2022-10-12 16:10:22
  * @FilePath: \ink-cli\src\shared\utils.ts
  * @description:
  */
@@ -101,6 +101,8 @@ export const isJsx = (filename: string): boolean => checkType(filename, '.jsx')
 export const isTsx = (filename: string): boolean => checkType(filename, '.tsx')
 
 export const isTs = (filename: string): boolean => checkType(filename, '.ts')
+
+export const isDts = (filename: string): boolean => /\.d\.ts$/.test(filename)
 
 export const isJs = (filename: string): boolean => checkType(filename, '.js')
 

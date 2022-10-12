@@ -2,7 +2,7 @@
  * @Author: Archy
  * @Date: 2021-12-17 19:35:55
  * @LastEditors: Archy
- * @LastEditTime: 2022-10-11 14:49:49
+ * @LastEditTime: 2022-10-11 15:39:28
  * @FilePath: \ink-cli\ink.config.js
  * @description:
  */
@@ -17,7 +17,7 @@ module.exports = {
       commonjs: 'cjs',
       esmodule: 'es',
     },
-    include: ['mock', 'mock2'],
+    include: ['mock'],
     exclude: ['mock/ignore'],
     target: ['commonjs', 'esmodule', 'umd'],
   },

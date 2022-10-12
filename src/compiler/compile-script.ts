@@ -2,13 +2,12 @@
  * @author: Archy
  * @Date: 2021-12-14 09:57:11
  * @LastEditors: Archy
- * @LastEditTime: 2022-10-11 14:52:01
+ * @LastEditTime: 2022-10-12 16:00:07
  * @FilePath: \ink-cli\src\compiler\compile-script.ts
  * @description:
  */
 import { readFile, removeSync, writeFileSync } from 'fs-extra'
 import { transformAsync, TransformOptions } from '@babel/core'
-import ts from 'typescript'
 import {
   handleScriptImportExt,
   replaceExt,
